@@ -1,0 +1,29 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Java & Gradle
+/build/
+*/build/
+.gradle/
+*.class
+
+# Python (FastAPI)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# dotenv
+.env
+
+# OS files
+.DS_Store
+
+# Docker
+*.log
+docker/data/
+
+# Jupyter (if ever used)
+*.ipynb_checkpoints/
