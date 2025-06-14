@@ -1,0 +1,21 @@
+# 이름 : applicatino-jwt.yml
+# JWT 설정 파일
+spring:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration:
+      access: 7200     # 2시간
+      refresh: 864000 # 240 hours / 10 days
+
+security:
+  permit-all:
+    urls: # todo /suspends 경로 해결
+      - "/auth/**"
+      - "/v3/api/test1"
+      - "/ws-stomp/**"
+      - "/suspends"
+      - "/login/oauth2/code/**"
+      - "/swagger-ui/**"
+      - "/v3/api-docs/**"
+      - "/v3/api-docs"
+      - "/swagger-resources/**"

@@ -1,4 +1,4 @@
-# IntelliJ
+# IDEA
 .idea/
 *.iml
 
@@ -7,23 +7,23 @@
 */build/
 .gradle/
 *.class
-
-# Python (FastAPI)
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.env
+*.jar
+api/gradle/
+api/.gradle/
+api/build/
 
 # dotenv
 .env
 
-# OS files
+# macOS
 .DS_Store
+**/.DS_Store
+
+# Python (FastAPI)
+__pycache__/
+*.py[cod]
+*.env
 
 # Docker
 *.log
 docker/data/
-
-# Jupyter (if ever used)
-*.ipynb_checkpoints/

@@ -1,0 +1,28 @@
+spring:
+    application:
+        name: api
+    profiles:
+        active: local # local, dev (?? ?? ?? dev? ??)
+        include: jwt  # JWT, AWS, LOGIN, OAUTH2
+    servlet:
+        multipart:
+            enabled: true
+            max-request-size: 5MB
+            max-file-size: 5MB
+server:
+    servlet:
+        encoding:
+            force-response: true
+            charset: UTF-8
+            enabled: true
+
+springdoc:
+    api-docs:
+        enabled: true
+    swagger-ui:
+        groups-order: DESC
+        doc-expansion: list
+        tags-sorter: alpha
+        operationsSorter: method
+        disable-swagger-default-url: true
+        display-request-duration: true
