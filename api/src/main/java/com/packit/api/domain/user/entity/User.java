@@ -3,6 +3,7 @@ package com.packit.api.domain.user.entity;
 import com.packit.api.common.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,16 +29,30 @@ public class User extends BaseTimeEntity {
     @NotBlank
     @Column(nullable = false, unique = true)
     private String nickname;
+    @NotBlank
+    @Column(nullable = false)
+    private String name; // 추가됨
 
-    @Enumerated(EnumType.STRING) // Enum을 String 형태로 저장
+    @NotNull
+    @Column(nullable = false)
+    private Integer age; // 추가됨
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Gender gender; // 추가됨
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
 
     @Builder
-    public User(String email, String password, String nickname, UserRole userRole) {
+    public User(String email, String password, String nickname, String name, Integer age, Gender gender, UserRole userRole) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
         this.userRole = userRole;
     }
 

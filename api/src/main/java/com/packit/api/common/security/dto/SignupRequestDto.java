@@ -1,11 +1,11 @@
 package com.packit.api.common.security.dto;
 
+import com.packit.api.domain.user.entity.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.Getter;
+import jakarta.validation.constraints.NotNull;
 
-@Data
+import lombok.Getter;
 @Getter
 public class SignupRequestDto {
 
@@ -21,7 +21,15 @@ public class SignupRequestDto {
     @NotBlank
     private String nickname;
 
+    @Schema(description = "이름", example = "김기수")
+    @NotBlank
+    private String name;
 
+    @Schema(description = "나이", example = "25")
+    @NotNull
+    private Integer age;
 
-
+    @Schema(description = "성별 (MALE / FEMALE / OTHER)", example = "MALE")
+    @NotNull
+    private Gender gender;
 }

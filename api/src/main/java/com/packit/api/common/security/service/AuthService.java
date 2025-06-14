@@ -29,8 +29,12 @@ public class AuthService {
                 .email(dto.getEmail())
                 .password(encodedPassword)
                 .nickname(dto.getNickname())
+                .name(dto.getName())
+                .age(dto.getAge())
+                .gender(dto.getGender())
                 .userRole(UserRole.USER)
                 .build();
+
 
         userRepository.save(user);
         log.info("[signUpUser] SIGN UP SUCCESS!! : {}", user.getEmail());
