@@ -5,14 +5,18 @@ import com.packit.api.domain.category.repository.CategoryRepository;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
 import com.packit.api.domain.tripCategory.dto.request.TripCategoryCreateRequest;
+import com.packit.api.domain.tripCategory.dto.response.TripCategoryProgressResponse;
 import com.packit.api.domain.tripCategory.dto.response.TripCategoryResponse;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.entity.TripCategoryStatus;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
+import com.packit.api.domain.tripItem.entity.TripItem;
+import com.packit.api.domain.tripItem.repository.TripItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class TripCategoryService {
     private final TripRepository tripRepository;
     private final CategoryRepository categoryRepository;
     private final TripCategoryRepository tripCategoryRepository;
+    private final TripItemRepository tripItemRepository;
 
     public TripCategoryResponse create(Long tripId, TripCategoryCreateRequest request, Long userId) {
         Trip trip = getTripOwnedByUser(tripId, userId);
@@ -69,5 +74,14 @@ public class TripCategoryService {
         if (!trip.getUser().getId().equals(userId)) {
             throw new SecurityException("본인의 여행만 접근할 수 있습니다.");
         }
+    }
+
+
+    public List<TripCategoryProgressResponse> getCategoryProgress(Long tripId, Long userId) {
+        Trip trip = getTripOwnedByUser(tripId, userId);
+        List<TripCategory> categories = tripCategoryRepository.findAllByTrip(trip);
+
+        return categories.stream()
+                .map(TripCategoryProgressResponse::of).collect(Collectors.toList());
     }
 }

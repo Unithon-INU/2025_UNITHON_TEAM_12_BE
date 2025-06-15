@@ -3,22 +3,30 @@ package com.packit.api.domain.trip.service;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
+import com.packit.api.domain.tripCategory.entity.TripCategory;
+import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
+import com.packit.api.domain.tripItem.entity.TripItem;
+import com.packit.api.domain.tripItem.repository.TripItemRepository;
 import com.packit.api.domain.user.entity.User;
 import com.packit.api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.security.SecurityUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.packit.api.domain.tripCategory.entity.TripCategoryStatus.COMPLETED;
 
 @Service
 @RequiredArgsConstructor
 public class TripService {
     private final UserRepository userRepository;
     private final TripRepository tripRepository;
+    private final TripCategoryRepository tripCategoryRepository;
+    private final TripItemRepository tripItemRepository;
 
     public TripResponse createTrip(TripCreateRequest request) {
         Long userId = SecurityUtils.getCurrentUserId();
@@ -60,5 +68,19 @@ public class TripService {
             throw new SecurityException("본인의 여행만 조회/수정/삭제할 수 있습니다.");
         }
         return trip;
+    }
+
+    public TripProgressResponse getTripProgress(Long tripId, Long userId) {
+        Trip trip = validateTripOwner(tripId, userId);
+        List<TripCategory> categories = tripCategoryRepository.findAllByTripId(tripId);
+
+        long total = categories.size();
+        long completed = categories.stream()
+                .filter(c -> c.getStatus() == COMPLETED)
+                .count();
+
+        double progress = total == 0 ? 0 : ((double) completed / total) * 100;
+
+        return TripProgressResponse.of(total, completed, progress);
     }
 }
