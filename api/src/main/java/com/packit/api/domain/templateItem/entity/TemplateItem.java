@@ -1,4 +1,4 @@
-package com.packit.api.domain.TemplateItem.entity;
+package com.packit.api.domain.templateItem.entity;
 
 import com.packit.api.common.Gender;
 import com.packit.api.domain.category.entity.Category;

@@ -1,6 +1,7 @@
 package com.packit.api.domain.tripItem.entity;
 
 import com.packit.api.common.BaseTimeEntity;
+import com.packit.api.domain.templateItem.entity.TemplateItem;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

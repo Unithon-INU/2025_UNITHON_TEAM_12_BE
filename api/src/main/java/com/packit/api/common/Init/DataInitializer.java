@@ -1,8 +1,8 @@
 package com.packit.api.common.Init;
 
 import com.packit.api.common.Gender;
-import com.packit.api.domain.TemplateItem.entity.TemplateItem;
-import com.packit.api.domain.TemplateItem.repository.TemplateItemRepository;
+import com.packit.api.domain.templateItem.entity.TemplateItem;
+import com.packit.api.domain.templateItem.repository.TemplateItemRepository;
 import com.packit.api.domain.category.entity.Category;
 import com.packit.api.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
