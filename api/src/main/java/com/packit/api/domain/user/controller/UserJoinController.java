@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/api/users")
 @Tag(name = "User Join API", description = "회원가입 API")
 @RequiredArgsConstructor
 public class UserJoinController {
