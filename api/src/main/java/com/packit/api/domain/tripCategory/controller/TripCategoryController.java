@@ -3,6 +3,7 @@ package com.packit.api.domain.tripCategory.controller;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.tripCategory.dto.request.TripCategoryCreateRequest;
 import com.packit.api.domain.tripCategory.dto.response.TripCategoryResponse;
+import com.packit.api.domain.tripCategory.dto.response.TripCategoryProgressResponse;
 import com.packit.api.domain.tripCategory.entity.TripCategoryStatus;
 import com.packit.api.domain.tripCategory.service.TripCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -54,5 +55,12 @@ public class TripCategoryController {
         Long userId = SecurityUtils.getCurrentUserId();
         tripCategoryService.delete(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "카테고리별 진행률", description = "각 카테고리의 총 항목 수, 완료 수, 진행 상태를 반환합니다.")
+    @GetMapping("/{tripId}/progress/categories")
+    public ResponseEntity<List<TripCategoryProgressResponse>> getCategoryProgress(@PathVariable Long tripId) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        return ResponseEntity.ok(tripCategoryService.getCategoryProgress(tripId, userId));
     }
 }

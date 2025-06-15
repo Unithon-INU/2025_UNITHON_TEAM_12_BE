@@ -3,6 +3,7 @@ package com.packit.api.domain.trip.controller;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
 import com.packit.api.domain.trip.service.TripService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,5 +73,12 @@ public class TripController {
         Long userId = SecurityUtils.getCurrentUserId();
         tripService.deleteTrip(id, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "전체 짐싸기 진행률 조회", description = "여행 내 전체 카테고리의 짐싸기 완료 상태를 기반으로 진행률을 반환합니다.")
+    @GetMapping("/{tripId}/progress")
+    public ResponseEntity<TripProgressResponse> getTripProgress(@PathVariable Long tripId, @AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        return ResponseEntity.ok(tripService.getTripProgress(tripId, userId));
     }
 }
