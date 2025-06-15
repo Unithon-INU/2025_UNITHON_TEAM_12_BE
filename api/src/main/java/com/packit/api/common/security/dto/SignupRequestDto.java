@@ -1,6 +1,6 @@
 package com.packit.api.common.security.dto;
 
-import com.packit.api.domain.user.entity.Gender;
+import com.packit.api.common.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

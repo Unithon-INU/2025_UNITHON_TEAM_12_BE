@@ -1,6 +1,7 @@
 package com.packit.api.domain.user.entity;
 
 import com.packit.api.common.BaseTimeEntity;
+import com.packit.api.common.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
