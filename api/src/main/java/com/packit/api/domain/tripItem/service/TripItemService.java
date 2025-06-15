@@ -1,7 +1,7 @@
 package com.packit.api.domain.tripItem.service;
 
-import com.packit.api.domain.TemplateItem.entity.TemplateItem;
-import com.packit.api.domain.TemplateItem.repository.TemplateItemRepository;
+import com.packit.api.domain.templateItem.entity.TemplateItem;
+import com.packit.api.domain.templateItem.repository.TemplateItemRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
 import com.packit.api.domain.tripCategory.service.TripCategoryService;

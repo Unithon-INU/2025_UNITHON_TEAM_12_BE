@@ -15,6 +15,7 @@ import com.packit.api.domain.user.entity.User;
 import com.packit.api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,14 +28,18 @@ public class TripService {
     private final TripRepository tripRepository;
     private final TripCategoryRepository tripCategoryRepository;
     private final TripItemRepository tripItemRepository;
+    private final TripInitializerService tripInitializerService;
 
+    @Transactional
     public TripResponse createTrip(TripCreateRequest request) {
         Long userId = SecurityUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         Trip trip = Trip.of(user, request);
-        tripRepository.save(trip);
+        Trip savedTrip = tripRepository.save(trip);
+
+        tripInitializerService.initializeDefaultsFor(savedTrip);
 
         return TripResponse.from(trip);
     }
