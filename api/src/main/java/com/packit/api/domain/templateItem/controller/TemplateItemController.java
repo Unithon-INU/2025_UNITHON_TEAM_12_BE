@@ -13,17 +13,21 @@ import java.util.List;
 
 @Tag(name = "TemplateItem", description = "카테고리별 템플릿 아이템 조회 API")
 @RestController
-@RequestMapping("/api/template-items")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class TemplateItemController {
 
     private final TemplateItemService templateItemService;
 
-    @Operation(summary = "카테고리별 템플릿 아이템 조회", description = "선택한 카테고리(categoryId)의 템플릿 아이템 목록을 반환합니다.")
-    @GetMapping
+
+    @Operation(
+            summary = "카테고리별 템플릿 아이템 조회",
+            description = "선택한 카테고리(categoryId)의 템플릿 아이템 목록을 반환합니다."
+    )
+    @GetMapping("/categories/{categoryId}/template-items")
     public ResponseEntity<List<TemplateItemResponse>> getTemplateItems(
-            @Parameter(description = "카테고리 ID", required = true)
-            @RequestParam Long categoryId
+            @Parameter(description = "카테고리 ID", required = true, example = "1")
+            @PathVariable Long categoryId
     ) {
         return ResponseEntity.ok(templateItemService.findByCategory(categoryId));
     }

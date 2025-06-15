@@ -46,38 +46,39 @@ public class TripController {
     }
 
     @Operation(summary = "여행 상세 조회", description = "여행 ID에 해당하는 상세 정보를 조회합니다.")
-    @Parameter(name = "id", description = "조회할 여행 ID", required = true)
+
     @GetMapping("/{id}")
-    public ResponseEntity<TripResponse> getTripDetail(@PathVariable Long id) {
+    public ResponseEntity<TripResponse> getTripDetail(
+            @Parameter(name = "id", description = "조회할 여행 ID", required = true)
+            @PathVariable Long id) {
         Long userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(tripService.getTripDetail(id, userId));
     }
 
     @Operation(summary = "여행 수정", description = "여행 ID에 해당하는 여행 정보를 수정합니다.")
-    @Parameters({
-            @Parameter(name = "id", description = "수정할 여행 ID", required = true),
-            @Parameter(name = "request", description = "수정할 여행 정보", required = true)
-    })
-    @PatchMapping("/{id}")
+    @PatchMapping("/{tripId}")
     public ResponseEntity<TripResponse> updateTrip(
-            @PathVariable Long id,
+            @Parameter(name = "tripId", description = "수정할 여행 ID", required = true)
+            @PathVariable Long tripId,
+            @Parameter(name = "request", description = "수정할 여행 정보", required = true)
             @RequestBody @Valid TripUpdateRequest request) {
         Long userId = SecurityUtils.getCurrentUserId();
-        return ResponseEntity.ok(tripService.updateTrip(id, userId, request));
+        return ResponseEntity.ok(tripService.updateTrip(tripId, userId, request));
     }
 
     @Operation(summary = "여행 삭제", description = "여행 ID에 해당하는 여행을 삭제합니다.")
-    @Parameter(name = "id", description = "삭제할 여행 ID", required = true)
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTrip(@PathVariable Long id) {
+    @DeleteMapping("/{tripId}")
+    public ResponseEntity<Void> deleteTrip(
+            @Parameter(name = "tripId", description = "삭제할 여행 ID", required = true)
+            @PathVariable Long tripId) {
         Long userId = SecurityUtils.getCurrentUserId();
-        tripService.deleteTrip(id, userId);
+        tripService.deleteTrip(tripId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "전체 짐싸기 진행률 조회", description = "여행 내 전체 카테고리의 짐싸기 완료 상태를 기반으로 진행률을 반환합니다.")
     @GetMapping("/{tripId}/progress")
-    public ResponseEntity<TripProgressResponse> getTripProgress(@PathVariable Long tripId, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<TripProgressResponse> getTripProgress(@PathVariable Long tripId) {
         Long userId = SecurityUtils.getCurrentUserId();
         return ResponseEntity.ok(tripService.getTripProgress(tripId, userId));
     }
