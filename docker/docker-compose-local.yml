@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: pk-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: packet_db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - "3307:3306"       # MySQL 컨테이너의 3306을 로컬에서 3307로 매핑
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - pk-backend-network
+
+  redis:
+    image: redis:latest
+    container_name: pk-redis
+    ports:
+      - "6379:6379"  # 호스트와 컨테이너 포트 매핑
+    command: [ "redis-server", "--requirepass", "1234" ]  # Redis에 비밀번호 설정
+    networks:
+      - pk-backend-network
+
+volumes:
+  mysql_data:
+
+networks:
+  pk-backend-network:
