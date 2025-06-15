@@ -1,5 +1,7 @@
 package com.packit.api.domain.tripItem.service;
 
+import com.packit.api.domain.TemplateItem.entity.TemplateItem;
+import com.packit.api.domain.TemplateItem.repository.TemplateItemRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
@@ -17,6 +19,7 @@ public class TripItemService {
 
     private final TripItemRepository tripItemRepository;
     private final TripCategoryRepository tripCategoryRepository;
+    private final TemplateItemRepository templateItemRepository;
 
     public TripItemResponse create(Long tripCategoryId, TripItemCreateRequest request, Long userId) {
         TripCategory category = getCategoryOwnedByUser(tripCategoryId, userId);
@@ -67,5 +70,24 @@ public class TripItemService {
         if (!category.getTrip().getUser().getId().equals(userId)) {
             throw new SecurityException("본인의 여행 항목만 관리할 수 있습니다.");
         }
+    }
+
+    public void addItemsFromTemplate(Long tripCategoryId, List<Long> templateItemIds, Long userId) {
+        TripCategory category = getCategoryOwnedByUser(tripCategoryId, userId);
+
+        List<TemplateItem> templateItems = templateItemRepository.findAllById(templateItemIds);
+        List<TripItem> tripItems = templateItems.stream()
+                .map(template -> TripItem.builder()
+                        .tripCategory(category)
+                        .name(template.getName())
+                        .quantity(template.getDefaultQuantity())
+                        .isChecked(false)
+                        .isSaved(true)
+                        .isAiGenerated(false)
+                        .memo(null)
+                        .build())
+                .toList();
+
+        tripItemRepository.saveAll(tripItems);
     }
 }

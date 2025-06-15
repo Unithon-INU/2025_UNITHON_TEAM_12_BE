@@ -2,6 +2,7 @@ package com.packit.api.domain.tripItem.controller;
 
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
+import com.packit.api.domain.tripItem.dto.request.TripItemFromTemplateRequest;
 import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
 import com.packit.api.domain.tripItem.service.TripItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,5 +60,15 @@ public class TripItemController {
         Long userId = SecurityUtils.getCurrentUserId();
         tripItemService.delete(itemId, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "템플릿 아이템 복사", description = "선택한 템플릿 아이템을 TripItem으로 복사합니다.")
+    @PostMapping("/{categoryId}/items/from-template")
+    public ResponseEntity<Void> addFromTemplate(
+            @PathVariable Long categoryId,
+            @RequestBody TripItemFromTemplateRequest request) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        tripItemService.addItemsFromTemplate(categoryId, request.templateItemIds(), userId);
+        return ResponseEntity.ok().build();
     }
 }
