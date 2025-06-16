@@ -12,6 +12,7 @@ import com.packit.api.domain.tripItem.entity.TripItem;
 import com.packit.api.domain.tripItem.repository.TripItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -118,22 +119,20 @@ public class TripItemService {
         }
     }
 
-    public void createItems(Long tripId, Long tripCategoryId, TripItemListCreateRequest request) {
+    @Transactional
+    public void createBulkItems(Long tripId, Long tripCategoryId, TripItemListCreateRequest request) {
         TripCategory tripCategory = tripCategoryRepository.findByIdAndTripId(tripCategoryId, tripId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 TripCategory가 존재하지 않습니다."));
 
-        for (TripItemCreateRequest item : request.getItems()) {
-            TripItem tripItem = TripItem.builder()
-                    .tripCategory(tripCategory)
-                    .name(item.name())
-                    .quantity(item.quantity() != null ? item.quantity() : 1)
-                    .memo(item.memo())
-                    .isChecked(false)
-                    .isSaved(true)
-                    .isAiGenerated(false) // 추후 AI 생성이면 true
-                    .build();
+        List<TripItem> tripItems = request.getItems().stream()
+                .map(item -> TripItem.of(
+                        tripCategory,
+                        item.name(),
+                        item.quantity() != null ? item.quantity() : 1,
+                        item.memo() // memo를 함께 받는 새로운 of() 정적 팩토리 추가
+                ))
+                .toList();
 
-            tripItemRepository.save(tripItem);
-        }
+        tripItemRepository.saveAll(tripItems);
     }
 }
