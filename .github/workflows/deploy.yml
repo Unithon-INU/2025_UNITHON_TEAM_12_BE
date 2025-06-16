@@ -1,0 +1,57 @@
+name: CI/CD Deploy to GCR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build with Gradle (Spring Boot)
+        working-directory: ./api
+        run: ./gradlew clean build -x test
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Configure Docker to use GCR
+        run: gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+
+      - name: Docker build & push to GCR
+        run: |
+          docker buildx build --platform linux/amd64 \
+            -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest \
+            -f docker/Dockerfile_Spring . \
+            --push
+
+      - name: SSH into GCE & deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.GCE_HOST }}
+          username: ${{ secrets.GCE_USER }}
+          key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
+          script: |
+            docker stop spring-app || true
+            docker rm spring-app || true
+            docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
+            docker run -d --env-file /home/spring/.env.prod \
+              -p 8080:8080 \
+              --name spring-app \
+              asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
