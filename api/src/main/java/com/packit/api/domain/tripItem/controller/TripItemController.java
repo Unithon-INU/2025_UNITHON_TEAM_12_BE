@@ -3,9 +3,11 @@ package com.packit.api.domain.tripItem.controller;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
 import com.packit.api.domain.tripItem.dto.request.TripItemFromTemplateRequest;
+import com.packit.api.domain.tripItem.dto.request.TripItemListCreateRequest;
 import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
 import com.packit.api.domain.tripItem.service.TripItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -72,4 +74,18 @@ public class TripItemController {
         tripItemService.addItemsFromTemplate(tripCategoryId, request.templateItemIds(), userId);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(summary = "TripItem 생성",
+            description = "기본템플릿이든 사용자 입력이든, name/quantity/memo만 포함된 단순 리스트를 기반으로 TripItem 생성")
+    @PostMapping("/trips/{tripId}/categories/{tripCategoryId}/items")
+    public ResponseEntity<Void> createTripItems(
+            @Parameter(description = "여행 ID") @PathVariable Long tripId,
+            @Parameter(description = "여행 카테고리 ID") @PathVariable Long tripCategoryId,
+            @RequestBody TripItemListCreateRequest request
+    ) {
+        tripItemService.createItems(tripId, tripCategoryId, request);
+        return ResponseEntity.ok().build();
+    }
+
+
 }

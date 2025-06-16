@@ -6,6 +6,7 @@ import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
 import com.packit.api.domain.tripCategory.service.TripCategoryService;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
+import com.packit.api.domain.tripItem.dto.request.TripItemListCreateRequest;
 import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
 import com.packit.api.domain.tripItem.entity.TripItem;
 import com.packit.api.domain.tripItem.repository.TripItemRepository;
@@ -114,6 +115,25 @@ public class TripItemService {
             category.updateStatus(COMPLETED);
         } else {
             category.updateStatus(IN_PROGRESS);
+        }
+    }
+
+    public void createItems(Long tripId, Long tripCategoryId, TripItemListCreateRequest request) {
+        TripCategory tripCategory = tripCategoryRepository.findByIdAndTripId(tripCategoryId, tripId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 TripCategory가 존재하지 않습니다."));
+
+        for (TripItemCreateRequest item : request.getItems()) {
+            TripItem tripItem = TripItem.builder()
+                    .tripCategory(tripCategory)
+                    .name(item.name())
+                    .quantity(item.quantity() != null ? item.quantity() : 1)
+                    .memo(item.memo())
+                    .isChecked(false)
+                    .isSaved(true)
+                    .isAiGenerated(false) // 추후 AI 생성이면 true
+                    .build();
+
+            tripItemRepository.save(tripItem);
         }
     }
 }
