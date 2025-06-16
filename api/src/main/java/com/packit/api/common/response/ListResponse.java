@@ -7,11 +7,11 @@ import java.util.List;
 
 @Getter
 public class ListResponse <T> extends  CommonResponse{
-    List<T> dataList;
+    List<T> data;
 
     @Builder
-    public ListResponse(int code, String message, List<T> dataList) {
+    public ListResponse(int code, String message, List<T> data) {
         super(true, code, message);
-        this.dataList = dataList;
+        this.data = data;
     }
 }
