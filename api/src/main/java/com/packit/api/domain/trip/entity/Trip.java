@@ -3,6 +3,7 @@ package com.packit.api.domain.trip.entity;
 import com.packit.api.common.BaseTimeEntity;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +39,9 @@ public class Trip extends BaseTimeEntity {
     private String description;
 
     private boolean isCompleted;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<TripCategory> tripCategories = new ArrayList<>();
 
     @Builder
     private Trip(User user, String title, String region, TripType tripType,

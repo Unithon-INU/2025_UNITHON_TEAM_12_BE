@@ -1,7 +1,6 @@
 package com.packit.api.domain.tripItem.entity;
 
 import com.packit.api.common.BaseTimeEntity;
-import com.packit.api.domain.templateItem.entity.TemplateItem;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,6 +18,7 @@ public class TripItem extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_category_id")
     private TripCategory tripCategory;
 
     private String name;
