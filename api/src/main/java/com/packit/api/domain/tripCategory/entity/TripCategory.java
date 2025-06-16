@@ -3,11 +3,15 @@ package com.packit.api.domain.tripCategory.entity;
 import com.packit.api.common.BaseTimeEntity;
 import com.packit.api.domain.category.entity.Category;
 import com.packit.api.domain.trip.entity.Trip;
+import com.packit.api.domain.tripItem.entity.TripItem;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +22,7 @@ public class TripCategory extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.LAZY)
