@@ -41,17 +41,32 @@ jobs:
             -f docker/Dockerfile_Spring . \
             --push
 
-      - name: SSH into GCE & deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SPRING_GCE_HOST }}
-          username: ${{ secrets.SPRING_GCE_USER }}
-          key: ${{ secrets.SPRING_GCE_SSH_PRIVATE_KEY }}
-          script: |
-            docker stop spring-app || true
-            docker rm spring-app || true
-            docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
-            docker run -d --env-file /home/spring/.env.prod \
-              -p 8080:8080 \
-              --name spring-app \
-              asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
+#      - name: SSH into GCE & deploy
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SPRING_GCE_HOST }}
+#          username: ${{ secrets.SPRING_GCE_USER }}
+#          key: ${{ secrets.SPRING_GCE_SSH_PRIVATE_KEY }}
+#          script: |
+#            docker stop spring-app || true
+#            docker rm spring-app || true
+#            docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
+#            docker run -d --env-file /home/spring/.env.prod \
+#              -p 8080:8080 \
+#              --name spring-app \
+#              asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
+#
+      - name: SSH into GCE via IAP and deploy
+        run: |
+          gcloud compute ssh ${{ secrets.SPRING_GCE_USER }}@spring-instance \
+            --zone=asia-northeast3-a \
+            --tunnel-through-iap \
+            --command="
+              docker stop spring-app || true &&
+              docker rm spring-app || true &&
+              docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest &&
+              docker run -d --env-file /home/spring/.env.prod \
+                -p 8080:8080 \
+                --name spring-app \
+                asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
+            "
