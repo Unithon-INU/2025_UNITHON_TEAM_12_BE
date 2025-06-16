@@ -49,7 +49,8 @@ jobs:
           key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
           script: |
             docker stop spring-app || true
-            docker rm spring-app || true
+            docker rm spring-app 
+            || true
             docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
             docker run -d --env-file /home/spring/.env.prod \
               -p 8080:8080 \
