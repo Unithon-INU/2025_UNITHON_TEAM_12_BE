@@ -25,6 +25,10 @@ public class TripCategory extends BaseTimeEntity {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
+    @OneToMany(mappedBy = "tripCategory", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<TripItem> tripItems = new ArrayList<>();
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category; // nullable
 
