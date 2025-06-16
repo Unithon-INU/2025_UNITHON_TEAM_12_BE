@@ -2,7 +2,7 @@ spring:
     application:
         name: api
     profiles:
-        active: prod # local, dev (?? ?? ?? dev? ??)
+        active: local # local, dev (?? ?? ?? dev? ??)
         include: jwt  # JWT, AWS, LOGIN, OAUTH2
     servlet:
         multipart:

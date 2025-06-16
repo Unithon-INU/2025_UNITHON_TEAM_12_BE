@@ -83,7 +83,7 @@ public class TripItemController {
             @Parameter(description = "여행 카테고리 ID") @PathVariable Long tripCategoryId,
             @RequestBody TripItemListCreateRequest request
     ) {
-        tripItemService.createItems(tripId, tripCategoryId, request);
+        tripItemService.createBulkItems(tripId, tripCategoryId, request);
         return ResponseEntity.ok().build();
     }
 
