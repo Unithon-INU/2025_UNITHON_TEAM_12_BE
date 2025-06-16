@@ -26,7 +26,7 @@ public class TripCategoryController {
 
     private final TripCategoryService tripCategoryService;
 
-    @Operation(summary = "여행에 카테고리 추가", description = "여행(tripId)에 새로운 카테고리를 추가합니다. 기본 제공 카테고리 또는 사용자 정의 이름을 기반으로 생성할 수 있습니다.")
+    @Operation(summary = "여행에 카테고리 추가", description = "여행(tripId)에 새로운 카테고리를 추가합니다. 사용자 정의 이름을 기반으로 생성할 수 있습니다.")
     @PostMapping("/trips/{tripId}/trip-categories")
     public ResponseEntity<SingleResponse<TripCategoryResponse>> createCategory(
             @PathVariable Long tripId,
