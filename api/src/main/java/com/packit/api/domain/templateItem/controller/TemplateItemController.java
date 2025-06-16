@@ -1,5 +1,6 @@
 package com.packit.api.domain.templateItem.controller;
 
+import com.packit.api.common.response.ListResponse;
 import com.packit.api.domain.templateItem.dto.TemplateItemResponse;
 import com.packit.api.domain.templateItem.service.TemplateItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,10 +26,11 @@ public class TemplateItemController {
             description = "선택한 카테고리(categoryId)의 템플릿 아이템 목록을 반환합니다."
     )
     @GetMapping("/categories/{categoryId}/template-items")
-    public ResponseEntity<List<TemplateItemResponse>> getTemplateItems(
+    public ResponseEntity<ListResponse<TemplateItemResponse>> getTemplateItems(
             @Parameter(description = "카테고리 ID", required = true, example = "1")
             @PathVariable Long categoryId
     ) {
-        return ResponseEntity.ok(templateItemService.findByCategory(categoryId));
+        List<TemplateItemResponse> items = templateItemService.findByCategory(categoryId);
+        return ResponseEntity.ok(new ListResponse<>(200, "템플릿 아이템 조회 완료", items));
     }
 }
