@@ -1,29 +1,42 @@
-# IDEA
-.idea/
-*.iml
-
-# Java & Gradle
-/build/
-*/build/
-.gradle/
+# =============== Java & Gradle ===============
 *.class
 *.jar
-api/gradle/
-api/.gradle/
-api/build/
+*.war
+*.ear
 
-# dotenv
-.env
+/build/
+/out/
 
-# macOS
+# =============== IntelliJ IDEA ===============
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# =============== OS 및 편집기 공통 ===============
 .DS_Store
-**/.DS_Store
+Thumbs.db
 
-# Python (FastAPI)
+# =============== Spring Boot 프로젝트 디렉토리 ===============
+api/build/
+api/.gradle/
+
+# =============== Docker 관련 ===============
+docker/*.env
+.env
+*.log
+
+# =============== Node (만약 ai/ 또는 frontend 폴더에 있다면) ===============
+node_modules/
+dist/
+*.log
+
+# =============== Python (FastAPI) ===============
 __pycache__/
 *.py[cod]
-*.env
+ai/.venv/
+ai/.mypy_cache/
 
-# Docker
-*.log
-docker/data/
+# =============== Swagger 등 생성 파일 (선택) ===============
+api/src/main/resources/static/swagger-ui/
+api/src/main/resources/META-INF/resources/
