@@ -3,7 +3,7 @@ name: CI/CD Deploy to GCR
 on:
   push:
     branches:
-      - chore/cicd
+      - main
 
 jobs:
   build-and-deploy:
