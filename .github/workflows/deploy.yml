@@ -3,7 +3,7 @@ name: CI/CD Deploy to GCR
 on:
   push:
     branches:
-      - main
+      - chore/cicd
 
 jobs:
   build-and-deploy:
@@ -44,13 +44,12 @@ jobs:
       - name: SSH into GCE & deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.GCE_HOST }}
-          username: ${{ secrets.GCE_USER }}
-          key: ${{ secrets.GCE_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SPRING_GCE_HOST }}
+          username: ${{ secrets.SPRING_GCE_USER }}
+          key: ${{ secrets.SPRING_GCE_SSH_PRIVATE_KEY }}
           script: |
             docker stop spring-app || true
-            docker rm spring-app 
-            || true
+            docker rm spring-app || true
             docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/packit:latest
             docker run -d --env-file /home/spring/.env.prod \
               -p 8080:8080 \
