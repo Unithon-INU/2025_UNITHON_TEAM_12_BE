@@ -1,0 +1,29 @@
+# IDEA
+.idea/
+*.iml
+
+# Java & Gradle
+/build/
+*/build/
+.gradle/
+*.class
+*.jar
+api/gradle/
+api/.gradle/
+api/build/
+
+# dotenv
+.env
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Python (FastAPI)
+__pycache__/
+*.py[cod]
+*.env
+
+# Docker
+*.log
+docker/data/
