@@ -11,6 +11,7 @@ import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
 import com.packit.api.domain.tripItem.entity.TripItem;
 import com.packit.api.domain.tripItem.repository.TripItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static com.packit.api.domain.tripCategory.entity.TripCategoryStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TripItemService {
@@ -46,12 +48,18 @@ public class TripItemService {
     public TripItemResponse update(Long itemId, TripItemCreateRequest request, Long userId) {
         TripItem item = getItemOwnedByUser(itemId, userId);
         item.update(request.name(), request.quantity(), request.memo());
+        tripItemRepository.save(item);
         return TripItemResponse.from(item);
     }
 
     public void toggleCheck(Long itemId, Long userId) {
         TripItem item = getItemOwnedByUser(itemId, userId);
+        log.info("Before toggle: {}", item.isChecked());
         item.toggleCheck();
+        log.info("After toggle: {}", item.isChecked());
+        tripItemRepository.save(item);
+
+
         updateCategoryStatusAfterItemChange(item.getTripCategory());
     }
 
