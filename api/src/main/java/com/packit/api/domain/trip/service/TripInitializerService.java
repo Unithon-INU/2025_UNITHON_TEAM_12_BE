@@ -17,12 +17,11 @@ import java.util.List;
 public class TripInitializerService {
 
     private final CategoryRepository categoryRepository;
-    private final TemplateItemRepository templateItemRepository;
     private final TripCategoryRepository tripCategoryRepository;
-    private final TripItemRepository tripItemRepository;
+
 
     public void initializeDefaultsFor(Trip trip) {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAllByOrderByIdAsc();
         for (Category category : categories) {
             TripCategory tripCategory = TripCategory.of(trip, category, category.getName());
             tripCategoryRepository.save(tripCategory);
