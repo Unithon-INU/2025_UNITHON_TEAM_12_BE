@@ -8,4 +8,11 @@ import java.util.List;
 
 public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findAllByUserId(Long userId);
+
+    int countByUserId(Long userId);
+
+    int countByUserIdAndIsCompletedTrue(Long userId);
+
+    int countByUserIdAndIsCompletedFalse(Long userId);
 }
+
