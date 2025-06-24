@@ -32,15 +32,15 @@ public class User extends BaseTimeEntity {
     private String nickname;
     @NotBlank
     @Column(nullable = false)
-    private String name; // 추가됨
+    private String name;
 
     @NotNull
     @Column(nullable = false)
-    private Integer age; // 추가됨
+    private Integer age;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Gender gender; // 추가됨
+    private Gender gender;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
