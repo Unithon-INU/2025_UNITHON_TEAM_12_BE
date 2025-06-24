@@ -5,6 +5,7 @@ import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
 import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
+import com.packit.api.domain.trip.dto.response.TripSummaryResponse;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
@@ -87,5 +88,12 @@ public class TripService {
         double progress = total == 0 ? 0 : ((double) completed / total) * 100;
 
         return TripProgressResponse.of(total, completed, progress);
+    }
+
+    public TripSummaryResponse getTripSummaryByUser(Long userId) {
+        int total = tripRepository.countByUserId(userId);
+        int planned = tripRepository.countByUserIdAndIsCompletedFalse(userId);
+        int completed = tripRepository.countByUserIdAndIsCompletedTrue(userId);
+        return TripSummaryResponse.of(total, planned, completed);
     }
 }

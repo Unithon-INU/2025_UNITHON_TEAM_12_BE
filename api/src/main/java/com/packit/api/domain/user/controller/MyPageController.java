@@ -3,6 +3,7 @@ package com.packit.api.domain.user.controller;
 import com.packit.api.common.response.SingleResponse;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.user.dto.response.MyPageResponse;
+import com.packit.api.domain.trip.dto.response.TripSummaryResponse;
 import com.packit.api.domain.user.service.MyPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,5 +25,14 @@ public class MyPageController {
         Long userId = SecurityUtils.getCurrentUserId();
         MyPageResponse response = myPageService.getMyInfo(userId);
         return ResponseEntity.ok(new SingleResponse<>(200, "마이페이지 조회 성공", response));
+    }
+
+
+    @GetMapping("/trip-summary")
+    @Operation(summary = "여행 요약 정보 조회", description = "총 여행 횟수, 계획 중, 완료된 여행 수를 반환합니다.")
+    public ResponseEntity<SingleResponse<TripSummaryResponse>> getTripSummary() {
+        Long userId = SecurityUtils.getCurrentUserId();
+        TripSummaryResponse summary = myPageService.getTripSummary(userId);
+        return ResponseEntity.ok(new SingleResponse<>(200, "여행 요약 정보 조회 성공", summary));
     }
 }
