@@ -26,6 +26,23 @@ services:
     command: [ "redis-server", "--requirepass", "1234" ]  # Redis에 비밀번호 설정
     networks:
       - pk-backend-network
+  
+  fastapi:
+    build:
+      context: ../ai/app
+      dockerfile: ../docker/Dockerfile_FastApi
+    container_name: pk-fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../ai/app:/app
+    env_file:
+      - ../ai/.env
+    networks:
+      - pk-backend-network
+    depends_on:
+      - redis
+      - mysql
 
 volumes:
   mysql_data:
