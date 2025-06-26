@@ -69,6 +69,18 @@ public class TripItem extends BaseTimeEntity {
                 .build();
     }
 
+    public static TripItem ofAiGenerated(TripCategory tripCategory, String name, int quantity) {
+        return TripItem.builder()
+                .tripCategory(tripCategory)
+                .name(name)
+                .quantity(quantity)
+                .memo(null)
+                .isChecked(false)
+                .isSaved(true)
+                .isAiGenerated(true)
+                .build();
+    }
+
     public void toggleCheck() {
         this.isChecked = !this.isChecked;
     }
