@@ -1,4 +1,4 @@
-name: FastAPI CI/CD Deploy to GCR
+name: FastAPI CI/CD Deploy to GCR2
 
 on:
   push:
