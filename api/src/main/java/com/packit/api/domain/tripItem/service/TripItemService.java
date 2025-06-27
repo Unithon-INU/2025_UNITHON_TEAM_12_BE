@@ -2,6 +2,9 @@ package com.packit.api.domain.tripItem.service;
 
 import com.packit.api.domain.templateItem.entity.TemplateItem;
 import com.packit.api.domain.templateItem.repository.TemplateItemRepository;
+import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
+import com.packit.api.domain.trip.entity.Trip;
+import com.packit.api.domain.trip.service.TripService;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
 import com.packit.api.domain.tripCategory.service.TripCategoryService;
@@ -28,6 +31,7 @@ public class TripItemService {
     private final TripCategoryRepository tripCategoryRepository;
     private final TemplateItemRepository templateItemRepository;
     private final TripCategoryService tripCategoryService;
+    private final TripService tripService;
 
     public TripItemResponse create(Long tripCategoryId, TripItemCreateRequest request, Long userId) {
         TripCategory category = getCategoryOwnedByUser(tripCategoryId, userId);
@@ -52,15 +56,19 @@ public class TripItemService {
         return TripItemResponse.from(item);
     }
 
-    public void toggleCheck(Long itemId, Long userId) {
+    public TripProgressCountResponse toggleCheck(Long itemId, Long userId) {
         TripItem item = getItemOwnedByUser(itemId, userId);
+        Trip trip = getTripOwnerByUser(item.getTripCategory().getTrip(), userId);
+
         log.info("Before toggle: {}", item.isChecked());
         item.toggleCheck();
         log.info("After toggle: {}", item.isChecked());
         tripItemRepository.save(item);
 
 
+
         updateCategoryStatusAfterItemChange(item.getTripCategory());
+        return tripService.getTripProgressCount(trip.getId());
     }
 
     public void delete(Long itemId, Long userId) {
@@ -87,6 +95,12 @@ public class TripItemService {
         if (!category.getTrip().getUser().getId().equals(userId)) {
             throw new SecurityException("본인의 여행 항목만 관리할 수 있습니다.");
         }
+    }
+    private Trip getTripOwnerByUser(Trip trip, Long userId) {
+        if (!trip.getUser().getId().equals(userId)) {
+            throw new SecurityException("본인의 여행 항목만 관리할 수 있습니다.");
+        }
+        return trip;
     }
 
     public void addItemsFromTemplate(Long tripCategoryId, List<Long> templateItemIds, Long userId) {
@@ -143,4 +157,5 @@ public class TripItemService {
 
         tripItemRepository.saveAll(tripItems);
     }
+
 }
