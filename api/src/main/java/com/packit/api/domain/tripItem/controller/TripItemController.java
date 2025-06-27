@@ -5,6 +5,7 @@ import com.packit.api.common.response.SingleResponse;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
+import com.packit.api.domain.tripItem.dto.request.TripItemDeleteRequest;
 import com.packit.api.domain.tripItem.dto.request.TripItemFromTemplateRequest;
 import com.packit.api.domain.tripItem.dto.request.TripItemListCreateRequest;
 import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
@@ -68,6 +69,16 @@ public class TripItemController {
     public ResponseEntity<SingleResponse<Void>> deleteItem(@PathVariable Long tripItemId) {
         Long userId = SecurityUtils.getCurrentUserId();
         tripItemService.delete(tripItemId, userId);
+        return ResponseEntity.ok(new SingleResponse<>(200, "아이템 삭제 완료", null));
+    }
+
+    @Operation(summary = "아이템 여러 개 삭제", description = "여러 TripItem을 한 번에 삭제합니다.")
+    @DeleteMapping("/trip-items")
+    public ResponseEntity<SingleResponse<Void>> deleteItems(
+            @RequestBody TripItemDeleteRequest request
+    ) {
+        Long userId = SecurityUtils.getCurrentUserId();
+        tripItemService.deleteItems(request.getTripItemIds(), userId);
         return ResponseEntity.ok(new SingleResponse<>(200, "아이템 삭제 완료", null));
     }
 
