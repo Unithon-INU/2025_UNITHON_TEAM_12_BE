@@ -1,3 +1,7 @@
 fastapi==0.110.0
 uvicorn[standard]==0.29.0
-google-generativeai==0.3.2 
+# Gemini API 클라이언트 (Google Generative AI용)
+google-generativeai==0.8.5
+
+# Vertex AI SDK (ChatModel 등 사용 시 필요)
+google-cloud-aiplatform==1.44.0

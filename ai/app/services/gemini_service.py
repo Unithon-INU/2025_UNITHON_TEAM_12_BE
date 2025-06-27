@@ -2,6 +2,8 @@
 from typing import List, Dict
 import os
 import google.generativeai as genai
+from vertexai.preview.generative_models import GenerativeModel
+import vertexai
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
@@ -85,3 +87,12 @@ class GeminiPromptService:
                 tag_values = line.split(":", 1)[1]
                 tags += [t.strip() for t in tag_values.split(",") if t.strip()]
         return tags
+    
+
+vertexai.init(project="packit-463009", location="us-central1")
+
+# 추천 함수
+def get_packing_recommendation(prompt: str) -> str:
+    model = GenerativeModel("gemini-2.5-flash")
+    response = model.generate_content(prompt)
+    return response.text
