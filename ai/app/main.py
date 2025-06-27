@@ -1,12 +1,8 @@
 import os
 from dotenv import load_dotenv
-import google.generativeai as genai
 
 # .env 로딩 (경로: ai/app/.env)
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-for m in genai.list_models():
-    print(m.name, m.supported_generation_methods)
 
 from fastapi import FastAPI
 from api.v1 import recommend
