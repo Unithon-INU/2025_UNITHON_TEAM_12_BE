@@ -33,9 +33,9 @@ jobs:
       - name: Docker build & push to GCR
         run: |
           docker buildx build --platform linux/amd64 \
-            -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest \
-            -f docker/Dockerfile_FastApi ai \
-            --push
+          -t asia-northeast3-docker.pkg.dev/.../fastapi:latest \
+          -f docker/Dockerfile_FastApi . \
+          --push
 
       - name: SSH into GCE via IAP and deploy
         run: |
