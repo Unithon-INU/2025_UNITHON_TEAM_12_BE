@@ -98,7 +98,7 @@ public class TripService {
         return TripSummaryResponse.of(total, planned, completed);
     }
 
-    public TripProgressCountResponse getTripProgress(Long tripId) {
+    public TripProgressCountResponse getTripProgressCount(Long tripId) {
         List<TripItem> items = tripItemRepository.findAllByTripId(tripId);
 
         int total = items.size();

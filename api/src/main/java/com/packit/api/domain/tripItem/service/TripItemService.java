@@ -68,7 +68,7 @@ public class TripItemService {
 
 
         updateCategoryStatusAfterItemChange(item.getTripCategory());
-        return tripService.getTripProgress(trip.getId());
+        return tripService.getTripProgressCount(trip.getId());
     }
 
     public void delete(Long itemId, Long userId) {
