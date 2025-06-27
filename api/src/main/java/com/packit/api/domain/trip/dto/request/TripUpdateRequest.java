@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record TripUpdateRequest(
         @NotBlank
@@ -18,7 +19,7 @@ public record TripUpdateRequest(
 
         @NotNull
         @Schema(description = "여행 유형 (FAMILY, FRIEND, BUSINESS, OTHER)", example = "FAMILY")
-        TripType tripType,
+        List<TripType> tripTypes,
 
         @NotNull
         @Schema(description = "수정된 여행 시작일 (yyyy-MM-dd)", example = "2025-07-02")
