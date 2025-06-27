@@ -5,6 +5,7 @@ import com.packit.api.common.response.SingleResponse;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.trip.dto.response.TripNearestResponse;
 import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
 import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
@@ -97,5 +98,13 @@ public class TripController {
         // 권한 체크 필요 시 TripService 내에서 수행
         TripProgressCountResponse response = tripService.getTripProgressCount(tripId);
         return ResponseEntity.ok(new SingleResponse<>(200, "여행 진행률 조회 성공", response));
+    }
+
+    @Operation(summary = "가장 가까운 완료된 여행 조회", description = "오늘 이후 출발하는 완료된 여행 중 가장 빠른 여행을 조회합니다.")
+    @GetMapping("/trips/nearest-completed")
+    public ResponseEntity<SingleResponse<TripNearestResponse>> getNearestCompletedTrip() {
+        Long userId = SecurityUtils.getCurrentUserId();
+        TripNearestResponse response = tripService.getNearestCompletedTrip(userId);
+        return ResponseEntity.ok(new SingleResponse<>(200, "조회 성공", response));
     }
 }
