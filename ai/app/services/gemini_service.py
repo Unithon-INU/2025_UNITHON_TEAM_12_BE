@@ -7,7 +7,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 class GeminiPromptService:
     def __init__(self):
-        self.model = genai.GenerativeModel("gemini-pro")
+        self.model = genai.GenerativeModel(model_name="models/gemini-2.0-flash")
 
     def get_items_for_category(self, category: str, gender: str, age: int, region: str, start: str, end: str) -> List[Dict[str, str]]:
         prompt = f"""
