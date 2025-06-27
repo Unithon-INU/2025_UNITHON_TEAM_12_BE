@@ -3,8 +3,10 @@ package com.packit.api.domain.trip.service;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
 import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
+import com.packit.api.domain.trip.dto.response.TripSummaryResponse;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
@@ -87,5 +89,21 @@ public class TripService {
         double progress = total == 0 ? 0 : ((double) completed / total) * 100;
 
         return TripProgressResponse.of(total, completed, progress);
+    }
+
+    public TripSummaryResponse getTripSummaryByUser(Long userId) {
+        int total = tripRepository.countByUserId(userId);
+        int planned = tripRepository.countByUserIdAndIsCompletedFalse(userId);
+        int completed = tripRepository.countByUserIdAndIsCompletedTrue(userId);
+        return TripSummaryResponse.of(total, planned, completed);
+    }
+
+    public TripProgressCountResponse getTripProgressCount(Long tripId) {
+        List<TripItem> items = tripItemRepository.findAllByTripId(tripId);
+
+        int total = items.size();
+        int checked = (int) items.stream().filter(TripItem::isChecked).count();
+
+        return TripProgressCountResponse.of(tripId, total, checked);
     }
 }

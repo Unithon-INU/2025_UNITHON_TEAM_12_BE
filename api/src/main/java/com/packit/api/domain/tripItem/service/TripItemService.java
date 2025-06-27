@@ -2,20 +2,27 @@ package com.packit.api.domain.tripItem.service;
 
 import com.packit.api.domain.templateItem.entity.TemplateItem;
 import com.packit.api.domain.templateItem.repository.TemplateItemRepository;
+import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
+import com.packit.api.domain.trip.entity.Trip;
+import com.packit.api.domain.trip.service.TripService;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
 import com.packit.api.domain.tripCategory.repository.TripCategoryRepository;
 import com.packit.api.domain.tripCategory.service.TripCategoryService;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
+import com.packit.api.domain.tripItem.dto.request.TripItemListCreateRequest;
 import com.packit.api.domain.tripItem.dto.response.TripItemResponse;
 import com.packit.api.domain.tripItem.entity.TripItem;
 import com.packit.api.domain.tripItem.repository.TripItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.packit.api.domain.tripCategory.entity.TripCategoryStatus.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TripItemService {
@@ -24,6 +31,7 @@ public class TripItemService {
     private final TripCategoryRepository tripCategoryRepository;
     private final TemplateItemRepository templateItemRepository;
     private final TripCategoryService tripCategoryService;
+    private final TripService tripService;
 
     public TripItemResponse create(Long tripCategoryId, TripItemCreateRequest request, Long userId) {
         TripCategory category = getCategoryOwnedByUser(tripCategoryId, userId);
@@ -44,13 +52,23 @@ public class TripItemService {
     public TripItemResponse update(Long itemId, TripItemCreateRequest request, Long userId) {
         TripItem item = getItemOwnedByUser(itemId, userId);
         item.update(request.name(), request.quantity(), request.memo());
+        tripItemRepository.save(item);
         return TripItemResponse.from(item);
     }
 
-    public void toggleCheck(Long itemId, Long userId) {
+    public TripProgressCountResponse toggleCheck(Long itemId, Long userId) {
         TripItem item = getItemOwnedByUser(itemId, userId);
+        Trip trip = getTripOwnerByUser(item.getTripCategory().getTrip(), userId);
+
+        log.info("Before toggle: {}", item.isChecked());
         item.toggleCheck();
+        log.info("After toggle: {}", item.isChecked());
+        tripItemRepository.save(item);
+
+
+
         updateCategoryStatusAfterItemChange(item.getTripCategory());
+        return tripService.getTripProgressCount(trip.getId());
     }
 
     public void delete(Long itemId, Long userId) {
@@ -77,6 +95,12 @@ public class TripItemService {
         if (!category.getTrip().getUser().getId().equals(userId)) {
             throw new SecurityException("본인의 여행 항목만 관리할 수 있습니다.");
         }
+    }
+    private Trip getTripOwnerByUser(Trip trip, Long userId) {
+        if (!trip.getUser().getId().equals(userId)) {
+            throw new SecurityException("본인의 여행 항목만 관리할 수 있습니다.");
+        }
+        return trip;
     }
 
     public void addItemsFromTemplate(Long tripCategoryId, List<Long> templateItemIds, Long userId) {
@@ -116,4 +140,22 @@ public class TripItemService {
             category.updateStatus(IN_PROGRESS);
         }
     }
+
+    @Transactional
+    public void createBulkItems(Long tripId, Long tripCategoryId, TripItemListCreateRequest request) {
+        TripCategory tripCategory = tripCategoryRepository.findByIdAndTripId(tripCategoryId, tripId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 TripCategory가 존재하지 않습니다."));
+
+        List<TripItem> tripItems = request.getItems().stream()
+                .map(item -> TripItem.of(
+                        tripCategory,
+                        item.name(),
+                        item.quantity() != null ? item.quantity() : 1,
+                        item.memo() // memo를 함께 받는 새로운 of() 정적 팩토리 추가
+                ))
+                .toList();
+
+        tripItemRepository.saveAll(tripItems);
+    }
+
 }

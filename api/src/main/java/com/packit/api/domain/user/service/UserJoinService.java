@@ -2,11 +2,10 @@ package com.packit.api.domain.user.service;
 
 
 import com.packit.api.common.exception.BadRequestException;
-import com.packit.api.domain.user.dto.NicknameUpdateRequestDto;
-import com.packit.api.domain.user.dto.PasswordCheckRequestDto;
-import com.packit.api.domain.user.dto.PasswordUpdateRequestDto;
+import com.packit.api.domain.user.dto.request.NicknameUpdateRequestDto;
+import com.packit.api.domain.user.dto.request.PasswordCheckRequestDto;
+import com.packit.api.domain.user.dto.request.PasswordUpdateRequestDto;
 import com.packit.api.domain.user.entity.User;
-import com.packit.api.domain.user.entity.UserRole;
 import com.packit.api.domain.user.exception.*;
 import com.packit.api.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
