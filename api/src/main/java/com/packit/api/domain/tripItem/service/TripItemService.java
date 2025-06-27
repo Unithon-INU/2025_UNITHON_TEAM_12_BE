@@ -77,6 +77,15 @@ public class TripItemService {
         updateCategoryStatusAfterItemChange(item.getTripCategory());
     }
 
+    @Transactional
+    public void deleteItems(List<Long> itemIds, Long userId) {
+        for (Long itemId : itemIds) {
+            TripItem item = getItemOwnedByUser(itemId, userId);
+            tripItemRepository.delete(item);
+            updateCategoryStatusAfterItemChange(item.getTripCategory());
+        }
+    }
+
     private TripItem getItemOwnedByUser(Long itemId, Long userId) {
         TripItem item = tripItemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("아이템을 찾을 수 없습니다."));
