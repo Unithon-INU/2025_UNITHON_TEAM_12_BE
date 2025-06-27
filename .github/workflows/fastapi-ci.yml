@@ -1,0 +1,54 @@
+name: FastAPI CI/CD Deploy to GCR
+
+on:
+  push:
+    branches:
+      - feat/fastapi/root  
+    paths:
+      - 'feat/fastapi/root/**'
+      - '.github/workflows/fastapi-ci.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: feat/fastapi/root
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Configure Docker to use GCR
+        run: gcloud auth configure-docker asia-northeast3-docker.pkg.dev
+
+      - name: Docker build & push to GCR
+        run: |
+          docker buildx build --platform linux/amd64 \
+            -t asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest \
+            -f docker/Dockerfile_FastApi . \
+            --push
+
+      - name: SSH into GCE via IAP and deploy
+        run: |
+          gcloud compute ssh ${{ secrets.FASTAPI_GCE_USER }}@fastapi-instance \
+            --zone=asia-northeast3-a \
+            --tunnel-through-iap \
+            --command="
+              docker stop fastapi-app || true &&
+              docker rm fastapi-app || true &&
+              docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest &&
+              docker run -d \
+                -p 8000:8000 \
+                --name fastapi-app \
+                asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest
+            "
