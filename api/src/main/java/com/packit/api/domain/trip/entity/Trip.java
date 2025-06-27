@@ -30,8 +30,9 @@ public class Trip extends BaseTimeEntity {
     private String title;
     private String region;
 
+    @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)
-    private TripType tripType;
+    private List<TripType> tripTypes= new ArrayList<>();
 
     private LocalDate startDate;
     private LocalDate endDate;
@@ -44,12 +45,12 @@ public class Trip extends BaseTimeEntity {
     private List<TripCategory> tripCategories = new ArrayList<>();
 
     @Builder
-    private Trip(User user, String title, String region, TripType tripType,
+    private Trip(User user, String title, String region, List<TripType> tripTypes,
                  LocalDate startDate, LocalDate endDate, String description) {
         this.user = user;
         this.title = title;
         this.region = region;
-        this.tripType = tripType;
+        this.tripTypes = tripTypes;
         this.startDate = startDate;
         this.endDate = endDate;
         this.description = description;
@@ -61,16 +62,17 @@ public class Trip extends BaseTimeEntity {
                 .user(user)
                 .title(request.title())
                 .region(request.region())
-                .tripType(request.tripType())
+                .tripTypes(request.tripTypes())
                 .startDate(request.startDate())
                 .endDate(request.endDate())
                 .description(request.description())
                 .build();
     }
+
     public void update(TripUpdateRequest request) {
         this.title = request.title();
         this.region = request.region();
-        this.tripType = request.tripType();
+        this.tripTypes = request.tripTypes();
         this.startDate = request.startDate();
         this.endDate = request.endDate();
         this.description = request.description();

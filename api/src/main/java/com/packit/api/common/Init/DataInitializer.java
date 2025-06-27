@@ -38,7 +38,7 @@ public class DataInitializer implements CommandLineRunner {
                 TemplateItem.of(essentials, "신용카드", 1, Gender.BOTH),
                 TemplateItem.of(essentials, "현금", 1, Gender.BOTH),
 
-                // 의류 & 액세서리
+                // 의류
                 TemplateItem.of(clothes, "상의", 2, Gender.BOTH),
                 TemplateItem.of(clothes, "하의", 2, Gender.BOTH),
                 TemplateItem.of(clothes, "외투", 1, Gender.BOTH),
@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
                 TemplateItem.of(clothes, "선글라스", 1, Gender.BOTH),
                 TemplateItem.of(clothes, "장갑", 1, Gender.BOTH),
 
-                // 세면도구 & 위생품
+                // 세면도구
                 TemplateItem.of(hygiene, "칫솔, 치약", 1, Gender.BOTH),
                 TemplateItem.of(hygiene, "샴푸, 린스", 1, Gender.BOTH),
                 TemplateItem.of(hygiene, "바디워시", 1, Gender.BOTH),
@@ -60,7 +60,7 @@ public class DataInitializer implements CommandLineRunner {
                 TemplateItem.of(hygiene, "휴지", 1, Gender.BOTH),
                 TemplateItem.of(hygiene, "생리용품", 1, Gender.FEMALE),
 
-                // 건강 & 응급 용품
+                // 의약품
                 TemplateItem.of(health, "개인 내복약", 1, Gender.BOTH),
                 TemplateItem.of(health, "진통제", 1, Gender.BOTH),
                 TemplateItem.of(health, "소화제", 1, Gender.BOTH),

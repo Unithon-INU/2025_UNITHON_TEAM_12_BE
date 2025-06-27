@@ -4,12 +4,13 @@ import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.entity.TripType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record TripResponse(
         Long id,
         String title,
         String region,
-        TripType tripType,
+        List<TripType> tripTypes,
         LocalDate startDate,
         LocalDate endDate,
         String description,
@@ -20,7 +21,7 @@ public record TripResponse(
                 trip.getId(),
                 trip.getTitle(),
                 trip.getRegion(),
-                trip.getTripType(),
+                trip.getTripTypes(),
                 trip.getStartDate(),
                 trip.getEndDate(),
                 trip.getDescription(),
