@@ -7,6 +7,8 @@ import com.packit.api.domain.ai.client.dto.AiRecommendApiResponse;
 import com.packit.api.domain.ai.dto.request.AiRecommendRequest;
 import com.packit.api.domain.ai.dto.response.AiRecommendedCategoryResponse;
 import com.packit.api.domain.ai.dto.response.AiRecommendedItemResponse;
+import com.packit.api.domain.ai.entity.AiRecommendationItemLog;
+import com.packit.api.domain.ai.repository.AiRecommendationItemLogRepository;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
@@ -20,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Service
@@ -31,6 +34,8 @@ public class AiRecommendService {
     private final TripCategoryRepository tripCategoryRepository;
     private final TripItemRepository tripItemRepository;
     private final UserRepository userRepository;
+    private final AiRecommendationItemLogRepository aiRecommendationItemLogRepository;
+
 
     @Transactional
     public List<AiRecommendedCategoryResponse> recommendItems(Long userId, AiRecommendRequest request) {
@@ -83,17 +88,27 @@ public class AiRecommendService {
                     .toList();
 
             for (AiRecommendedItemResponse item : items) {
-                TripItem tripItem = TripItem.ofAiGenerated(
-                        category,
-                        item.name(),
-                        item.quantity()
-                );
-                tripItemRepository.save(tripItem);
+                AiRecommendationItemLog log = AiRecommendationItemLog.builder()
+                        .tripCategory(category)
+                        .name(item.name())
+                        .quantity(item.quantity())
+                        .createdAt(LocalDateTime.now())
+                        .build();
+                aiRecommendationItemLogRepository.save(log);
             }
-
             result.add(AiRecommendedCategoryResponse.from(categoryName, items));
         }
-
         return result;
+    }
+
+    public List<AiRecommendedItemResponse> getRecommendationsByTripCategory(Long tripCategoryId) {
+        TripCategory category = tripCategoryRepository.findById(tripCategoryId)
+                .orElseThrow(() -> new NotFoundException("카테고리를 찾을 수 없습니다."));
+
+        List<AiRecommendationItemLog> logs = aiRecommendationItemLogRepository.findByTripCategory(category);
+
+        return logs.stream()
+                .map(log -> new AiRecommendedItemResponse(log.getName(), log.getQuantity()))
+                .toList();
     }
 }

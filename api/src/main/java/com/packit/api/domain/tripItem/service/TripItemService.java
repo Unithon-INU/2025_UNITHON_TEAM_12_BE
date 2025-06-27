@@ -165,6 +165,7 @@ public class TripItemService {
                 .toList();
 
         tripItemRepository.saveAll(tripItems);
+        updateCategoryStatusAfterItemChange(tripCategory);
     }
 
 }

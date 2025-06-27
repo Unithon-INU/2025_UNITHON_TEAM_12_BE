@@ -1,6 +1,8 @@
 package com.packit.api.domain.trip.service;
 
 import com.packit.api.common.security.util.SecurityUtils;
+import com.packit.api.domain.ai.dto.request.AiRecommendRequest;
+import com.packit.api.domain.ai.service.AiRecommendService;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
 import com.packit.api.domain.trip.dto.response.*;
@@ -29,6 +31,7 @@ public class TripService {
     private final TripCategoryRepository tripCategoryRepository;
     private final TripItemRepository tripItemRepository;
     private final TripInitializerService tripInitializerService;
+    private final AiRecommendService aiRecommendService;
 
     @Transactional
     public TripResponse createTrip(TripCreateRequest request) {
@@ -40,6 +43,8 @@ public class TripService {
         Trip savedTrip = tripRepository.save(trip);
 
         tripInitializerService.initializeDefaultsFor(savedTrip);
+
+        aiRecommendService.recommendItems(userId, new AiRecommendRequest(savedTrip.getId()));
 
         return TripResponse.from(trip);
     }
