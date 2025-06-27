@@ -3,6 +3,7 @@ package com.packit.api.domain.trip.service;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
+import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
 import com.packit.api.domain.trip.dto.response.TripProgressResponse;
 import com.packit.api.domain.trip.dto.response.TripResponse;
 import com.packit.api.domain.trip.dto.response.TripSummaryResponse;
@@ -95,5 +96,14 @@ public class TripService {
         int planned = tripRepository.countByUserIdAndIsCompletedFalse(userId);
         int completed = tripRepository.countByUserIdAndIsCompletedTrue(userId);
         return TripSummaryResponse.of(total, planned, completed);
+    }
+
+    public TripProgressCountResponse getTripProgress(Long tripId) {
+        List<TripItem> items = tripItemRepository.findAllByTripId(tripId);
+
+        int total = items.size();
+        int checked = (int) items.stream().filter(TripItem::isChecked).count();
+
+        return TripProgressCountResponse.of(tripId, total, checked);
     }
 }

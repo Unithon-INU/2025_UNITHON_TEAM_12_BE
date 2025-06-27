@@ -3,6 +3,7 @@ package com.packit.api.domain.tripItem.controller;
 import com.packit.api.common.response.ListResponse;
 import com.packit.api.common.response.SingleResponse;
 import com.packit.api.common.security.util.SecurityUtils;
+import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
 import com.packit.api.domain.tripItem.dto.request.TripItemCreateRequest;
 import com.packit.api.domain.tripItem.dto.request.TripItemFromTemplateRequest;
 import com.packit.api.domain.tripItem.dto.request.TripItemListCreateRequest;
@@ -56,10 +57,10 @@ public class TripItemController {
 
     @Operation(summary = "짐싸기 체크 상태 토글", description = "아이템의 isChecked 상태를 true/false로 전환합니다.")
     @PatchMapping("/trip-items/{tripItemId}/check")
-    public ResponseEntity<SingleResponse<Void>> toggleCheck(@PathVariable Long tripItemId) {
+    public ResponseEntity<SingleResponse<TripProgressCountResponse>> toggleCheck(@PathVariable Long tripItemId) {
         Long userId = SecurityUtils.getCurrentUserId();
-        tripItemService.toggleCheck(tripItemId, userId);
-        return ResponseEntity.ok(new SingleResponse<>(200, "짐싸기 체크 상태 변경 완료", null));
+        TripProgressCountResponse response = tripItemService.toggleCheck(tripItemId, userId);
+        return ResponseEntity.ok(new SingleResponse<>(200, "짐싸기 체크 상태 변경 완료", response));
     }
 
     @Operation(summary = "아이템 삭제", description = "해당 아이템을 삭제합니다.")
