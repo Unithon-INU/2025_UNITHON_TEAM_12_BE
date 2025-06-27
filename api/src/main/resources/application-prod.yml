@@ -21,6 +21,8 @@ spring:
         redis:
             host: ${REDIS_HOST}
             port: ${REDIS_PORT}
-
+ai:
+    recommendation:
+        url: http://34.47.122.54/ai/recommend
 swagger:
     base-url: http://${SWAGGER_BASE_URL}

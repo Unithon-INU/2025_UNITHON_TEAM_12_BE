@@ -5,6 +5,7 @@ import com.packit.api.domain.trip.entity.TripType;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Builder
 public record TripNearestResponse(
@@ -14,7 +15,7 @@ public record TripNearestResponse(
         String description,
         LocalDate startDate,
         LocalDate endDate,
-        TripType tripType,
+        List<TripType> tripTypes,
         int progressRate
 ) {
     public static TripNearestResponse from(Trip trip, int totalCount, int checkedCount) {
@@ -26,7 +27,7 @@ public record TripNearestResponse(
                 .description(trip.getDescription())
                 .startDate(trip.getStartDate())
                 .endDate(trip.getEndDate())
-                .tripType(trip.getTripType())
+                .tripTypes(trip.getTripTypes())
                 .progressRate(progressRate)
                 .build();
     }

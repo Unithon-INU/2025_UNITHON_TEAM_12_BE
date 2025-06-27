@@ -51,7 +51,6 @@ public class TripController {
     }
 
     @Operation(summary = "여행 상세 조회", description = "여행 ID에 해당하는 상세 정보를 조회합니다.")
-
     @GetMapping("/{id}")
     public ResponseEntity<SingleResponse<TripResponse>> getTripDetail(
             @Parameter(name = "id", description = "조회할 여행 ID", required = true)

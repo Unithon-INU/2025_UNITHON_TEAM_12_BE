@@ -4,6 +4,7 @@ import com.packit.api.domain.trip.entity.TripType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Schema(description = "여행 생성 요청 DTO")
 public record TripCreateRequest(
@@ -14,8 +15,8 @@ public record TripCreateRequest(
         @Schema(description = "여행 지역", example = "제주도")
         String region,
 
-        @Schema(description = "여행 유형 (FAMILY, FRIEND, BUSINESS, OTHER)", example = "FAMILY")
-        TripType tripType,
+        @Schema(description = "여행 유형 목록 (복수 선택 가능)", example = "[\"OVERSEAS\", \"SUMMER\"]")
+        List<TripType> tripTypes,
 
         @Schema(description = "여행 시작일 (yyyy-MM-dd)", example = "2025-07-01")
         LocalDate startDate,

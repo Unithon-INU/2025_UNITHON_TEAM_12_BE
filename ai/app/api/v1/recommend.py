@@ -51,6 +51,15 @@ MULTI_CATEGORY_LIST = [
     "의류", "전자기기", "세면도구", "약품", "기타"
 ]
 
+class RecommendRequest(BaseModel):
+    gender: str
+    age: int
+    title: str
+    region: str
+    startDate: str
+    endDate: str
+    description: str
+    tripType: List[str]
 class CategoryRecommendResponse(BaseModel):
     category: str
     items: List[TripItemRecommendResponse]
