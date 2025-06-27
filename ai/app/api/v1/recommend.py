@@ -6,6 +6,24 @@ from services.gemini_service import GeminiPromptService
 router = APIRouter()
 gemini_service = GeminiPromptService()
 
+class TripConceptRequest(BaseModel):
+    title: str
+    region: str
+    startDate: str
+    endDate: str
+    description: str
+
+@router.post("/generate-concepts", response_model=List[str])
+def generate_concepts(request: TripConceptRequest):
+    return gemini_service.get_trip_concepts(
+        title=request.title,
+        region=request.region,
+        start=request.startDate,
+        end=request.endDate,
+        description=request.description
+    )
+
+
 class RecommendRequest(BaseModel):
     gender: str
     age: int
