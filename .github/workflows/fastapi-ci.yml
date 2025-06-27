@@ -47,7 +47,7 @@ jobs:
               docker rm fastapi-app || true &&
               docker pull asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest &&
               docker run -d \
-                --env-file /home/spring/.env.prod \
+                --env-file /home/gisu1102/ai/app/.env \
                 -p 8000:8000 \
                 --name fastapi-app \
                 asia-northeast3-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/${{ secrets.GCP_REPOSITORY }}/fastapi:latest
