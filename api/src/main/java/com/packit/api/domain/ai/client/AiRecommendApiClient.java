@@ -20,13 +20,12 @@ public class AiRecommendApiClient {
     @Value("${ai.recommendation.url}")
     private String recommendUrl;
 
-    public List<AiRecommendedItemResponse> requestRecommendations(AiRecommendApiRequest request) {
+    public List<AiRecommendApiResponse> requestRecommendations(AiRecommendApiRequest request) {
         return webClient.post()
                 .uri(recommendUrl)
                 .bodyValue(request)
                 .retrieve()
-                .bodyToFlux(AiRecommendApiResponse.class)
-                .map(AiRecommendedItemResponse::from)  //  변환
+                .bodyToFlux(AiRecommendApiResponse.class)//  변환
                 .collectList()
                 .block();
     }

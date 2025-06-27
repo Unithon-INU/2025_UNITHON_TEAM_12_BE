@@ -13,4 +13,6 @@ public interface TripCategoryRepository extends JpaRepository<TripCategory, Long
     List<TripCategory> findAllByTrip(Trip trip);
 
     Optional<TripCategory> findByIdAndTripId(Long tripCategoryId, Long tripId);
+
+    Optional<TripCategory> findByTripIdAndName(Long id, String categoryName);
 }

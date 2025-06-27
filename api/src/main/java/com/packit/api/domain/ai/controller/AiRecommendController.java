@@ -3,6 +3,7 @@ package com.packit.api.domain.ai.controller;
 import com.packit.api.common.response.ListResponse;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.ai.dto.request.AiRecommendRequest;
+import com.packit.api.domain.ai.dto.response.AiRecommendedCategoryResponse;
 import com.packit.api.domain.ai.dto.response.AiRecommendedItemResponse;
 import com.packit.api.domain.ai.service.AiRecommendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,11 +28,11 @@ public class AiRecommendController {
 
     @PostMapping("/recommend")
     @Operation(summary = "AI 추천 요청", description = "TripCategory에 기반한 추천 아이템을 반환합니다.")
-    public ResponseEntity<ListResponse<AiRecommendedItemResponse>> recommend(
+    public ResponseEntity<ListResponse<AiRecommendedCategoryResponse>> recommend(
             @RequestBody @Valid AiRecommendRequest request
     ) {
         Long userId = SecurityUtils.getCurrentUserId();
-        List<AiRecommendedItemResponse> items = aiRecommendService.recommendItems(userId, request);
+        List<AiRecommendedCategoryResponse> items = aiRecommendService.recommendItems(userId, request);
         return ResponseEntity.ok(new ListResponse<>(200, "AI 추천 조회 완료", items));
     }
 }

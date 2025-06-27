@@ -26,7 +26,7 @@ spring:
 
 ai:
     recommendation:
-        url: http://localhost:8000/ai/recommend
+        url: http://34.47.122.54/ai/recommend
 
 swagger:
     base-url: http://localhost:8080
