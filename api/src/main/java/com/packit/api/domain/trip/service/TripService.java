@@ -3,10 +3,7 @@ package com.packit.api.domain.trip.service;
 import com.packit.api.common.security.util.SecurityUtils;
 import com.packit.api.domain.trip.dto.request.TripCreateRequest;
 import com.packit.api.domain.trip.dto.request.TripUpdateRequest;
-import com.packit.api.domain.trip.dto.response.TripProgressCountResponse;
-import com.packit.api.domain.trip.dto.response.TripProgressResponse;
-import com.packit.api.domain.trip.dto.response.TripResponse;
-import com.packit.api.domain.trip.dto.response.TripSummaryResponse;
+import com.packit.api.domain.trip.dto.response.*;
 import com.packit.api.domain.trip.entity.Trip;
 import com.packit.api.domain.trip.repository.TripRepository;
 import com.packit.api.domain.tripCategory.entity.TripCategory;
@@ -19,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.packit.api.domain.tripCategory.entity.TripCategoryStatus.COMPLETED;
@@ -105,5 +103,17 @@ public class TripService {
         int checked = (int) items.stream().filter(TripItem::isChecked).count();
 
         return TripProgressCountResponse.of(tripId, total, checked);
+    }
+
+    public TripNearestResponse getNearestCompletedTrip(Long userId) {
+        LocalDate today = LocalDate.now();
+        Trip trip = tripRepository.findNearestCompletedTripAfterToday(userId, today)
+                .orElseThrow(() -> new RuntimeException("TRIP_NOT_FOUND"));
+
+        List<TripItem> items = tripItemRepository.findAllByTripId(trip.getId());
+        int total = items.size();
+        int checked = (int) items.stream().filter(TripItem::isChecked).count();
+
+        return TripNearestResponse.from(trip, total, checked);
     }
 }
