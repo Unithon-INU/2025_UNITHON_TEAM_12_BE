@@ -32,7 +32,34 @@ public enum TripType {
     WITH_CHILD("아이 동반"),
 
     @Schema(description = "호텔 숙박 여행")
-    HOTEL("호텔 숙박");
+    HOTEL("호텔 숙박"),
+
+    @Schema(description = "힐링 여행")
+    HEALING("힐링"),
+
+    @Schema(description = "레저/액티비티 여행")
+    LEISURE("레저"),
+
+    @Schema(description = "가족과 함께하는 여행")
+    FAMILY("가족"),
+
+    @Schema(description = "친구와 함께하는 여행")
+    FRIEND("친구"),
+
+    @Schema(description = "연인과 함께하는 여행")
+    COUPLE("연인"),
+
+    @Schema(description = "관광 중심의 여행")
+    SIGHTSEEING("관광"),
+
+    @Schema(description = "먹는 것이 중심인 여행")
+    FOOD("식도락"),
+
+    @Schema(description = "등산 중심의 여행")
+    HIKING("등산"),
+
+    @Schema(description = "장거리 여행 (국내 or 해외)")
+    LONG_DISTANCE("장거리");
 
     private final String displayName;
 
